@@ -1,0 +1,43 @@
+{
+  "name": "granax",
+  "version": "0.0.0",
+  "description": "complete client implementation of the tor control protocol",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test-suite && npm run linter",
+    "test-suite": "mocha test/** --recursive",
+    "coverage": "istanbul cover _mocha -- --recursive",
+    "linter": "eslint index.js lib test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bookchin/granax.git"
+  },
+  "keywords": [
+    "tor",
+    "onion",
+    "control",
+    "protocol",
+    "hidden",
+    "service",
+    "anonymous",
+    "dark",
+    "net",
+    "deep",
+    "web"
+  ],
+  "author": "Gordon Hall <gordonh@member.fsf.org>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/bookchin/granax/issues"
+  },
+  "homepage": "https://github.com/bookchin/granax#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.13.0",
+    "eslint": "^3.19.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "sinon": "^2.1.0"
+  }
+}
