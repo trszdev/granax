@@ -24,13 +24,9 @@ Make sure that `ControlPort=9051` (or your preferred port) is set in your
 const tor = require('granax')(9051, options);
 
 tor.on('ready', function() {
-  tor.createHiddenService('127.0.0.1:8080', {
-    virtualPort: 80, // default
-    keyType: 'NEW', // default
-    keyBlob: 'BEST' // default
-  }, (err, serviceId, privateKey) => {
-    console.info(`Service URL: ${serviceId}.onion`);
-    console.info(`Private Key: ${privateKey}`);
+  tor.createHiddenService('127.0.0.1:8080', (err, result) => {
+    console.info(`Service URL: ${result.serviceId}.onion`);
+    console.info(`Private Key: ${result.privateKey}`);
   });
 });
 
