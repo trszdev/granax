@@ -17,14 +17,38 @@ Install via NPM:
 npm install granax --save
 ```
 
-Open the control socket and issue commands:
+Make sure that `ControlPort=9051` (or your preferred port) is set in your 
+`torrc`, then you may open the control socket and issue commands:
 
 ```js
-const granax = require('granax');
-const tor = granax(9051); // Tor's ControlPort
+const tor = require('granax')(9051, options);
 
-// TODO 
+tor.on('ready', function() {
+  tor.createHiddenService('127.0.0.1:8080', {
+    virtualPort: 80, // default
+    keyType: 'NEW', // default
+    keyBlob: 'BEST' // default
+  }, (err, serviceId, privateKey) => {
+    console.info(`Service URL: ${serviceId}.onion`);
+    console.info(`Private Key: ${privateKey}`);
+  });
+});
+
+tor.on('error', function(err) {
+  console.error(err);
+});
 ```
+
+> Note that if using cookie authentication, the Node.js process must have the 
+> appropriate privileges to read the cookie file. Usually, this means running 
+> as the same user that is running Tor.
+
+Resources
+---------
+
+* [Granax Documentation](http://bookch.in/granax)
+* [Tor Control Specification](https://gitweb.torproject.org/torspec.git/plain/control-spec.txt)
+* [Tor Documentation](https://www.torproject.org/docs/documentation.html.en)
 
 License
 -------
