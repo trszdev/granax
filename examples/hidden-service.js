@@ -1,3 +1,9 @@
+/**
+ * Demonstrates how to take an ordinary node http server and expose it to the
+ * Tor network as a hidden service!
+ * @example
+ */
+
 'use strict';
 
 const http = require('http');
@@ -9,7 +15,6 @@ tor.on('ready', function() {
   server.listen(9555, '127.0.0.1');
   tor.createHiddenService('127.0.0.1:9555', (err, result) => {
     if (err) {
-      tor.socket.close();
       console.error(err);
     } else {
       console.info(
@@ -20,6 +25,5 @@ tor.on('ready', function() {
 });
 
 tor.on('error', function(err) {
-  tor.socket.close();
   console.error(err);
 });
