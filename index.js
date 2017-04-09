@@ -32,8 +32,3 @@ module.exports.commands = require('./lib/commands');
  * {@link module:replies}
  */
 module.exports.replies = require('./lib/replies');
-
-/**
- * {@link module:signals}
- */
-module.exports.signals = require('./lib/signals');
