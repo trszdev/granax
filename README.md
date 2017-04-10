@@ -42,6 +42,7 @@ tor.on('error', function(err) {
 Resources
 ---------
 
+* [Granax Examples](https://github.com/bookchin/granax/tree/master/examples)
 * [Granax Documentation](http://bookch.in/granax)
 * [Tor Control Specification](https://gitweb.torproject.org/torspec.git/plain/control-spec.txt)
 * [Tor Documentation](https://www.torproject.org/docs/documentation.html.en)
