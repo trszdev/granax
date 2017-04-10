@@ -1,8 +1,8 @@
 ![Granax](https://nodei.co/npm/granax.png?downloads=true)
 =========================================================
 
-[![Build Status](https://img.shields.io/travis/bookchin/granax/master.svg?style=flat-square)](https://travis-ci.org/bookchin/granax)
-[![Coverage Status](https://img.shields.io/coveralls/bookchin/granax.svg?style=flat-square)](https://coveralls.io/r/bookchin/granax)
+[![Build Status](https://img.shields.io/travis/bookchin/granax/master.svg?style=flat-square)](https://travis-ci.org/bookchin/granax) | 
+[![Coverage Status](https://img.shields.io/coveralls/bookchin/granax.svg?style=flat-square)](https://coveralls.io/r/bookchin/granax) | 
 [![NPM](https://img.shields.io/npm/v/granax.svg?style=flat-square)](https://www.npmjs.com/package/granax)
 
 Complete client implementation of the [Tor Control Protocol](https://gitweb.torproject.org/torspec.git/plain/control-spec.txt). 
