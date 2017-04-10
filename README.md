@@ -1,5 +1,5 @@
-Granax
-======
+![Granax](https://nodei.co/npm/granax.png?downloads=true)
+=========================================================
 
 [![Build Status](https://img.shields.io/travis/bookchin/granax/master.svg?style=flat-square)](https://travis-ci.org/bookchin/granax)
 [![Coverage Status](https://img.shields.io/coveralls/bookchin/granax.svg?style=flat-square)](https://coveralls.io/r/bookchin/granax)
