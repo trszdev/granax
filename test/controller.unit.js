@@ -328,7 +328,7 @@ describe('TorController', function() {
 
   });
 
-  const aliases = [
+  const methodAliases = [
     ['authenticate', 'AUTHENTICATE'],
     ['getAuthChallenge', 'AUTHCHALLENGE'],
     ['getProtocolInfo', 'PROTOCOLINFO'],
@@ -360,7 +360,7 @@ describe('TorController', function() {
     ['removeEventListeners', 'SETEVENTS']
   ];
 
-  aliases.forEach(([alias, command]) => {
+  methodAliases.forEach(([alias, command]) => {
     describe(`@method ${alias}`, function() {
 
       it('should call _send with the proper command', function(done) {
@@ -390,6 +390,31 @@ describe('TorController', function() {
     });
   });
 
-  // TODO: Test Signal aliases
+  const signalAliases = [
+    ['reloadConfig', 'RELOAD'],
+    ['shutdown', 'SHUTDOWN'],
+    ['dumpStats', 'DUMP'],
+    ['enableDebug', 'DEBUG'],
+    ['halt', 'HALT'],
+    ['clearDnsCache', 'CLEARDNSCACHE'],
+    ['cleanCircuits', 'NEWNYM'],
+    ['dumpHeartbeat', 'HEARTBEAT']
+  ];
+
+  signalAliases.forEach(([alias, signal]) => {
+    describe(`@method ${alias}`, function() {
+
+      it('should call signal with the correct name', function(done) {
+        let sock = new stream.Duplex({ read: () => null, write: () => null });
+        let tor = new TorController(sock, { authOnConnect: false });
+        let sig = sinon.stub(tor, 'signal').callsArg(1);
+        tor[alias](() => {
+          expect(sig.calledWithMatch(signal)).to.equal(true);
+          done();
+        });
+      });
+
+    });
+  });
 
 });
