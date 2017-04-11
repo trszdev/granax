@@ -1,5 +1,6 @@
 'use strict';
 
+const proxyquire = require('proxyquire');
 const { expect } = require('chai');
 const sinon = require('sinon');
 const stream = require('stream');
@@ -327,7 +328,68 @@ describe('TorController', function() {
 
   });
 
-  // TODO: Dynamically test passthrough aliases for commands
+  const aliases = [
+    ['authenticate', 'AUTHENTICATE'],
+    ['getAuthChallenge', 'AUTHCHALLENGE'],
+    ['getProtocolInfo', 'PROTOCOLINFO'],
+    ['createHiddenService', 'ADD_ONION'],
+    ['destroyHiddenService', 'DEL_ONION'],
+    ['setConfig', 'SETCONF'],
+    ['resetConfig', 'RESETCONF'],
+    ['getConfig', 'GETCONF'],
+    ['saveConfig', 'SAVECONF'],
+    ['signal', 'SIGNAL'],
+    ['createAddressMapping', 'MAPADDRESS'],
+    ['createCircuit', 'EXTENDCIRCUIT'],
+    ['extendCircuit', 'EXTENDCIRCUIT'],
+    ['setCircuitPurpose', 'SETCIRCUITPURPOSE'],
+    ['attachStream', 'ATTACHSTREAM'],
+    ['postDescriptor', 'POSTDESCRIPTOR'],
+    ['redirectStream', 'REDIRECTSTREAM'],
+    ['closeStream', 'CLOSESTREAM'],
+    ['closeCicuit', 'CLOSECIRCUIT'],
+    ['quit', 'QUIT'],
+    ['resolve', 'RESOLVE'],
+    ['loadConfig', 'LOADCONF'],
+    ['takeOwnership', 'TAKEOWNERSHIP'],
+    ['dropGuards', 'DROPGUARDS'],
+    ['fetchHiddenServiceDescriptor', 'HSFETCH'],
+    ['postHiddenServiceDescriptor', 'HSPOST'],
+    ['getInfo', 'GETINFO'],
+    ['addEventListeners', 'SETEVENTS'],
+    ['removeEventListeners', 'SETEVENTS']
+  ];
+
+  aliases.forEach(([alias, command]) => {
+    describe(`@method ${alias}`, function() {
+
+      it('should call _send with the proper command', function(done) {
+        let commandFunc = sinon.stub().returns('');
+        let TorController = proxyquire('../lib/controller', {
+          './commands': { [command]: commandFunc }
+        });
+        let sock = new stream.Duplex({ read: () => null, write: () => null });
+        let tor = new TorController(sock, { authOnConnect: false });
+        let _send = sinon.stub(tor, '_send').callsArg(1);
+        let numArgs = tor[alias].length;
+        let args = [];
+        while (args.length !== numArgs) {
+          if (args.length === numArgs - 1) {
+            args.push(function() {
+              expect(commandFunc.called).to.equal(true);
+              expect(_send.called).to.equal(true);
+              done();
+            });
+          } else {
+            args.push('');
+          }
+        }
+        tor[alias].apply(tor, args);
+      });
+
+    });
+  });
+
   // TODO: Test Signal aliases
 
 });
