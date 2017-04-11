@@ -55,7 +55,7 @@
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-running-as-tor-user.html">Running as Tor User</a></li>
+					<li><a href="tutorial-getting-started.html">Getting Started</a></li>
 				</ul>
 			</li>
 			
@@ -156,7 +156,7 @@ exports.ADD_ONION = function(target, opts = {}) {
     ['nonAnonymous', 'NonAnonymous']
   ];
 
-  for (let flag in flags) {
+  for (let flag of flags) {
     if (options[flag[0]]) {
       command.push(flag[1]);
     }
@@ -224,7 +224,7 @@ exports.SIGNAL = function(signal) {
  * @returns {string}
  */
 exports.MAPADDRESS = function(targetAddr, replaceAddr) {
-  return `MAPPADDRESS ${targetAddr}=${replaceAddr}`;
+  return `MAPADDRESS ${targetAddr}=${replaceAddr}`;
 };
 
 /**
@@ -232,8 +232,8 @@ exports.MAPADDRESS = function(targetAddr, replaceAddr) {
  * @returns {string}
  */
 exports.EXTENDCIRCUIT = function(circuitId, purpose) {
-  return `EXTENDCIRCUIT ${circuitId} ` +
-    (purpose ? `purpose="${purpose}"` : '');
+  return `EXTENDCIRCUIT ${circuitId}` +
+    (purpose ? ` purpose="${purpose}"` : '');
 };
 
 /**
@@ -254,7 +254,7 @@ exports.SETCIRCUITPURPOSE = function(circuitId, purpose) {
  */
 exports.ATTACHSTREAM = function(streamId, options) {
   return `ATTACHSTREAM ${streamId} ${options.circuitId}` +
-    (options.hopNumber ? `HOP=${options.hopNumber}` : '');
+    (options.hopNumber ? ` HOP=${options.hopNumber}` : '');
 };
 
 /**
@@ -358,7 +358,7 @@ exports.DROPGUARDS = function() {
  * @returns {string}
  */
 exports.HSFETCH = function(serviceId, serverLongName) {
-  return 'HSFETCH ${serviceId}' +
+  return `HSFETCH ${serviceId}` +
     (serverLongName ? ` SERVER=${serverLongName}` : '');
 };
 

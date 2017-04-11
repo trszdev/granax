@@ -55,7 +55,7 @@
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-running-as-tor-user.html">Running as Tor User</a></li>
+					<li><a href="tutorial-getting-started.html">Getting Started</a></li>
 				</ul>
 			</li>
 			
@@ -568,6 +568,93 @@
 
 
         
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".createReplySplitter"><span class="type-signature">&lt;static> </span>createReplySplitter()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Creates a message splitter from incoming socket data
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_controller.js.html">lib/controller.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>
@@ -4406,7 +4493,7 @@ lightly; it can increase vulnerability to tracking attacks over time.
             
 <hr>
 <dt>
-    <h4 class="name" id="loadConfig"><span class="type-signature"></span>loadConfig(configFilePath, callback)</h4>
+    <h4 class="name" id="loadConfig"><span class="type-signature"></span>loadConfig(configText, callback)</h4>
     
     
 </dt>
@@ -4414,7 +4501,7 @@ lightly; it can increase vulnerability to tracking attacks over time.
 
     
     <div class="description">
-        Instruct Tor to load the configuration file from the given path
+        Instruct Tor to load the configuration file from the given text
     </div>
     
 
@@ -4449,7 +4536,7 @@ lightly; it can increase vulnerability to tracking attacks over time.
 
         <tr>
             
-                <td class="name"><code>configFilePath</code></td>
+                <td class="name"><code>configText</code></td>
             
 
             <td class="type">
@@ -4466,7 +4553,7 @@ lightly; it can increase vulnerability to tracking attacks over time.
 
             
 
-            <td class="description last">Path to the config to read and send</td>
+            <td class="description last">Complete torrc config text to load</td>
         </tr>
 
     

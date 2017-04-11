@@ -55,7 +55,7 @@
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-running-as-tor-user.html">Running as Tor User</a></li>
+					<li><a href="tutorial-getting-started.html">Getting Started</a></li>
 				</ul>
 			</li>
 			
@@ -111,10 +111,6 @@ class TorController extends EventEmitter {
     return 'Tor safe cookie authentication controller-to-server hash';
   }
 
-  static get SERVER_HASH() {
-    return 'Tor safe cookie authentication server-to-controller hash';
-  }
-
   /**
    * Creates the challenge response from a SAFECOOKIE challenge
    * @param {string} cookie - The secret cookie string
@@ -130,6 +126,31 @@ class TorController extends EventEmitter {
         Buffer.from(serverNonce, 'hex')
       ]))
       .digest('hex');
+  }
+
+  /**
+   * Creates a message splitter from incoming socket data
+   * @static
+   */
+  static createReplySplitter() {
+    return new TransformStream({
+      objectMode: true,
+      transform: function(data, enc, next) {
+        let reply = [];
+        let lines = data.toString().split('\r\n');
+
+        for (let line of lines) {
+          reply.push(line);
+
+          if (line[3] === ' ') {
+            this.push(reply);
+            reply = [];
+          }
+        }
+
+        next(null);
+      }
+    });
   }
 
   /**
@@ -171,7 +192,7 @@ class TorController extends EventEmitter {
       .on('error', (err) => this._handleError(err))
       .on('close', () => this._handleClose());
 
-    this.socket.pipe(this._createReplySplitter())
+    this.socket.pipe(TorController.createReplySplitter())
       .on('data', (data) => this._handleReply(data));
   }
 
@@ -236,31 +257,6 @@ class TorController extends EventEmitter {
   }
 
   /**
-   * Creates a message splitter from incoming socket data
-   * @private
-   */
-  _createReplySplitter() {
-    return new TransformStream({
-      objectMode: true,
-      transform: function(data, enc, next) {
-        let reply = [];
-        let lines = data.toString().split('\r\n');
-
-        for (let line of lines) {
-          reply.push(line);
-
-          if (line[3] === ' ') {
-            this.push(reply);
-            reply = [];
-          }
-        }
-
-        next(null);
-      }
-    });
-  }
-
-  /**
    * Handles message processing and parsing from the socket
    * @private
    * @param {buffer} data
@@ -309,6 +305,7 @@ class TorController extends EventEmitter {
     const self = this;
 
     callback = callback || function(err) {
+      /* istanbul ignore else */
       if (err) {
         self.emit('error', err);
       }
@@ -393,6 +390,7 @@ class TorController extends EventEmitter {
    * @param {TorController~createHiddenServiceCallback} callback
    */
   createHiddenService(target, options, callback) {
+    /* istanbul ignore if */
     if (typeof options === 'function') {
       callback = options;
       options = {};
@@ -601,6 +599,7 @@ class TorController extends EventEmitter {
    * @param {TorController~createCircuitCallback}
    */
   createCircuit(purpose, callback) {
+    /* istanbul ignore if */
     if (typeof purpose === 'function') {
       callback = purpose;
       purpose = null;
@@ -650,6 +649,7 @@ class TorController extends EventEmitter {
    * @param {TorController~attachStreamCallback} callback
    */
   attachStream(streamId, options, callback) {
+    /* istanbul ignore if */
     if (typeof options === 'function') {
       callback = options;
       options = { circuitId: '0', hopNumber: null };
@@ -671,6 +671,7 @@ class TorController extends EventEmitter {
    * @param {TorController~postDescriptorCallback} callback
    */
   postDescriptor(descriptor, options, callback) {
+    /* istanbul ignore if */
     if (typeof options === 'function') {
       callback = options;
       options = {};
@@ -691,6 +692,7 @@ class TorController extends EventEmitter {
    * @param {TorController~redirectStreamCallback} callback
    */
   redirectStream(streamId, address, port, callback) {
+    /* istanbul ignore if */
     if (typeof port === 'function') {
       callback = port;
       port = null;
@@ -711,6 +713,7 @@ class TorController extends EventEmitter {
    * @see https://gitweb.torproject.org/torspec.git/tree/tor-spec.txt#n1404
    */
   closeStream(streamId, reason, callback) {
+    /* istanbul ignore if */
     if (typeof reason === 'function') {
       callback = reason;
       reason = 1;
@@ -731,6 +734,7 @@ class TorController extends EventEmitter {
    * @param {TorController~closeCircuitCallback} callback
    */
   closeCicuit(circuitId, options, callback) {
+    /* istanbul ignore if */
     if (typeof options === 'function') {
       callback = options;
       options = { ifUnused: false };
@@ -763,6 +767,7 @@ class TorController extends EventEmitter {
    * @param {TorController~resolveCallback} callback
    */
   resolve(address, options, callback) {
+    /* istanbul ignore if */
     if (typeof options === 'function') {
       callback = options;
       options = {};
@@ -776,19 +781,11 @@ class TorController extends EventEmitter {
    */
 
   /**
-   * Instruct Tor to load the configuration file from the given path
-   * @param {string} configFilePath - Path to the config to read and send
+   * Instruct Tor to load the configuration file from the given text
+   * @param {string} configText - Complete torrc config text to load
    * @param {TorController~loadConfigCallback} callback
    */
-  loadConfig(configFilePath, callback) {
-    let configText = null;
-
-    try {
-      configText = readFileSync(configFilePath).toString();
-    } catch (err) {
-      return callback(err);
-    }
-
+  loadConfig(configText, callback) {
     this._send(commands.LOADCONF(configText), callback);
   }
   /**
@@ -835,6 +832,7 @@ class TorController extends EventEmitter {
    * @param {TorController~fetchHiddenServiceDescriptorCallback} callback
    */
   fetchHiddenServiceDescriptor(serviceId, serverLongName, callback) {
+    /* istanbul ignore if */
     if (typeof serverLongName === 'function') {
       callback = serverLongName;
       serverLongName = '';
@@ -855,6 +853,7 @@ class TorController extends EventEmitter {
    * @see https://gitweb.torproject.org/torspec.git/tree/rend-spec.txt#n193
    */
   postHiddenServiceDescriptor(descriptor, serverLongName, callback) {
+    /* istanbul ignore if */
     if (typeof serverLongName === 'function') {
       callback = serverLongName;
       serverLongName = '';
