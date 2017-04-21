@@ -9,15 +9,6 @@ const childProcess = require('child_process');
 const os = require('os');
 
 
-function print() {
-  if (!process.env.GRANAX_VERBOSE) {
-    return;
-  }
-
-  console.log(...arguments);
-}
-
-
 /**
  * Get the platform specific download like for TBB by version
  * @param {string} platform
@@ -82,7 +73,7 @@ exports._unpackWindows = function(bundle, callback) {
   const extract = childProcess.spawn(_7z, [
     'x',
     path.join(__dirname, '.tbb.exe')
-  ], { cwd: dirname });
+  ], { cwd: __dirname });
 
   extract.on('close', (code) => {
     callback(code >= 0 ? null : new Error('Failed to unpack bundle'),
@@ -178,7 +169,7 @@ exports.install = function(callback) {
   let link = exports.getTorBrowserLink(os.platform());
   let basename = null;
 
-  print(`Downloading Tor Bundle from ${link}...`);
+  console.log(`Downloading Tor Bundle from ${link}...`);
 
   switch (os.platform()) {
     case 'win32':
@@ -201,7 +192,7 @@ exports.install = function(callback) {
       return callback(err);
     }
 
-    print(`Unpacking Tor Bundle into ${__dirname}...`);
+    console.log(`Unpacking Tor Bundle into ${__dirname}...`);
     exports.unpackTorBrowserBundle(basename, callback);
   });
 };
@@ -209,10 +200,10 @@ exports.install = function(callback) {
 if (!module.parent) {
   exports.install((err) => {
     if (err) {
-      print(err.message);
+      console.log(err.message);
       process.exit(1);
     } else {
-      print('Finished!')
+      console.log('Finished!')
       process.exit(0);
     }
   });
