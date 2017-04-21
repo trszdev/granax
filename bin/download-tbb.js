@@ -1,5 +1,7 @@
 'use strict';
 
+const TOR_VERSION = '6.5.2';
+
 const fs = require('fs');
 const { request } = require('https');
 const ncp = require('ncp');
@@ -16,7 +18,7 @@ const os = require('os');
  * @returns {string}
  */
 exports.getTorBrowserLink = function(platform, version) {
-  const v = version || '6.5.2';
+  const v = version || TOR_VERSION;
   const link = `https://dist.torproject.org/torbrowser/${v}`;
 
   switch (platform) {
