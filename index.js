@@ -6,16 +6,16 @@
 
 'use strict';
 
+const { getTorPath } = require('../bin/download-tbb');
+
+
 /**
  * Returns a {@link TorController} with automatically constructed socket
- * @param {number} controlPort - Port to connect controller socket
- * @param {object} [controllerOptions] - @see {@link TorController}
+ * to the local Tor bundle executable
+ * @returns {TorController}
  */
-module.exports = function(controlPort, controllerOptions) {
-  return new module.exports.TorController(
-    require('net').connect(controlPort),
-    controllerOptions
-  );
+module.exports = function() {
+
 };
 
 /**

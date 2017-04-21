@@ -17,11 +17,11 @@ Install via NPM:
 npm install granax --save
 ```
 
-Make sure that `ControlPort=9051` (or your preferred port) is set in your 
-`torrc`, then you may open the control socket and issue commands:
+As part of the installation process, Granax will download the Tor Browser 
+Bundle local to itself and use the included Tor executable.
 
 ```js
-const tor = require('granax')(9051, options);
+const tor = require('granax')();
 
 tor.on('ready', function() {
   tor.createHiddenService('127.0.0.1:8080', (err, result) => {
@@ -32,6 +32,21 @@ tor.on('ready', function() {
 
 tor.on('error', function(err) {
   console.error(err);
+});
+```
+
+### Using System Tor Installation
+
+Make sure that `ControlPort=9051` (or your preferred port) is set in your 
+`torrc`, then you may open the control socket and issue commands:
+
+```js
+const { connect } = require('net');
+const { TorController } = require('granax');
+const tor = new TorController(connect(9051), options);
+
+tor.on('ready', function() {
+  // party!
 });
 ```
 
