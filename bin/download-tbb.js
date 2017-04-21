@@ -156,8 +156,13 @@ exports.getTorPath = function(platform) {
     case 'darwin':
       return path.join(__dirname, '.tbb.app', 'TorBrowser', 'Tor', 'tor');
     case 'linux':
-      return path.join(__dirname, 'tor-browser_en-US', 'Browser',
-                       'TorBrowser', 'Tor', 'tor');
+      try {
+        childProcess.execFileSync('which', ['tor']).toString().trim();
+      } catch (err) {
+        throw new Error('Tor is not installed');
+      }
+      // return path.join(__dirname, 'tor-browser_en-US', 'Browser',
+      //                  'TorBrowser', 'Tor', 'tor');
     default:
       throw new Error('Unsupported platform');
   }
@@ -181,7 +186,10 @@ exports.install = function(callback) {
       basename = '.tbb.dmg';
       break;
     case 'linux':
-      basename = '.tbb.xz';
+      console.log('Skipping automatic Tor install on GNU+Linux!');
+      console.log('Be sure to install Tor using your system package manager.');
+      return;
+      // basename = '.tbb.xz';
       break;
     default:
       throw new Error('Unsupported platform');
