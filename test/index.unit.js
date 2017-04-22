@@ -23,19 +23,19 @@ describe('@module granax', function() {
       expect(tor).to.be.instanceOf(granax.TorController);
     });
 
-    it.skip('should connect on stdout from child', function(done) {
+    it.skip('should connect on stdout from child', function() {
 
     });
 
-    it.skip('should bubble child error on controller', function(done) {
+    it.skip('should bubble child error on controller', function() {
 
     });
 
-    it.skip('should take ownership on ready', function(done) {
+    it.skip('should take ownership on ready', function() {
 
     });
 
-    it.skip('should kill child on process exit', function(done) {
+    it.skip('should kill child on process exit', function() {
 
     });
 
