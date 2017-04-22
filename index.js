@@ -91,16 +91,16 @@ module.exports.tor = function(platform) {
 module.exports.TorController = require('./lib/controller');
 
 /**
- * {@link module:commands}
+ * {@link module:granax/commands}
  */
 module.exports.commands = require('./lib/commands');
 
 /**
- * {@link module:replies}
+ * {@link module:granax/replies}
  */
 module.exports.replies = require('./lib/replies');
 
 /**
- * {@link module:torrc}
+ * {@link module:granax/torrc}
  */
 module.exports.torrc = require('./lib/torrc');
