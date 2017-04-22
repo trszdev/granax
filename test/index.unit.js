@@ -1,15 +1,11 @@
 'use strict';
 
-const proxyquire = require('proxyquire');
-const { expect } = require('chai');
-const stream = require('stream');
-
 
 describe('@module granax', function() {
 
   describe('@exports', function() {
 
-    it.skip('should export a function that returns a TorController', function() {
+    it.skip('should return a TorController', function() {
 
     });
 
