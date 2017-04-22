@@ -9,6 +9,7 @@ const _7z = require('7zip')['7z'];
 const path = require('path');
 const childProcess = require('child_process');
 const os = require('os');
+const { tor: getTorPath } = require('..');
 
 
 /**
@@ -79,7 +80,7 @@ exports._unpackWindows = function(bundle, callback) {
 
   extract.on('close', (code) => {
     callback(code >= 0 ? null : new Error('Failed to unpack bundle'),
-             exports.getTorPath('win32'));
+             getTorPath('win32'));
   });
 };
 
@@ -117,7 +118,7 @@ exports._unpackMacintosh = function(bundle, callback) {
             callback(new Error('Failed to unpack bundle'));
           }
 
-          callback(null, exports.getTorPath());
+          callback(null, getTorPath('darwin'));
         });
       }
     );
@@ -140,32 +141,8 @@ exports._unpackLinux = function(bundle, callback) {
 
   extract.on('close', (code) => {
     callback(code <= 0 ? null : new Error('Failed to unpack bundle'),
-             exports.getTorPath('linux'));
+             getTorPath('linux'));
   });
-};
-
-/**
- * Returns the local path to the tor bundle
- * @returns {string}
- */
-exports.getTorPath = function(platform) {
-  switch (platform) {
-    case 'win32':
-      return path.join(__dirname, '$_OUTDIR', 'Browser', 'TorBrowser',
-                       'Tor', 'tor.exe');
-    case 'darwin':
-      return path.join(__dirname, '.tbb.app', 'TorBrowser', 'Tor', 'tor');
-    case 'linux':
-      try {
-        childProcess.execFileSync('which', ['tor']).toString().trim();
-      } catch (err) {
-        throw new Error('Tor is not installed');
-      }
-      // return path.join(__dirname, 'tor-browser_en-US', 'Browser',
-      //                  'TorBrowser', 'Tor', 'tor');
-    default:
-      throw new Error('Unsupported platform');
-  }
 };
 
 /**

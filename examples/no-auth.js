@@ -11,8 +11,9 @@
 //
 // If you haven't enabled an authentication method, you can simple authenticate
 // without supplying any credentials
-const granax = require('..');
-const tor = granax(9051, { authOnConnect: false });
+const { connect } = require('net');
+const { TorController } = require('..');
+const tor = new TorController(connect(9051), { authOnConnect: false });
 
 // At this point, we have an open socket to the control port, but we are not
 // authenticated. This means any command sent will fail and cause the socket

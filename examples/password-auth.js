@@ -11,8 +11,9 @@
 //
 // If you would prefer to authenticate with a password (set in your torrc),
 // you may instruct granax to not automatically authenticate.
-const granax = require('..');
-const tor = granax(9051, { authOnConnect: false });
+const { TorController } = require('..');
+const { connect } = require('net');
+const tor = new TorController(connect(9051), { authOnConnect: false });
 
 // At this point, we have an open socket to the control port, but we are not
 // authenticated. This means any command sent will fail and cause the socket
