@@ -65,24 +65,34 @@ module.exports = function(options) {
  * @returns {string}
  */
 module.exports.tor = function(platform) {
+  let torpath = null;
+
   switch (platform) {
     case 'win32':
-      return path.join(__dirname, '$_OUTDIR', 'Browser', 'TorBrowser',
-                       'Tor', 'tor.exe');
+      torpath = path.join(__dirname, '$_OUTDIR', 'Browser', 'TorBrowser',
+                          'Tor', 'tor.exe');
     case 'darwin':
-      return path.join(__dirname, '.tbb.app', 'TorBrowser', 'Tor', 'tor');
+      torpath = path.join(__dirname, '.tbb.app', 'TorBrowser', 'Tor', 'tor');
+    case 'android':
     case 'linux':
-      try {
-        return childProcess.execFileSync('which', ['tor']).toString().trim();
-      } catch (err) {
-        throw new Error('Tor is not installed');
+      if (!process.env.GRANAX_FORCE_LOCAL_TOR) {
+        // NB: Use the system Tor installation on android and linux
+        try {
+          torpath = childProcess.execFileSync('which', ['tor'])
+                      .toString().trim();
+        } catch (err) {
+          throw new Error('Tor is not installed');
+        }
+      } else {
+        torpath = path.join(__dirname, 'tor-browser_en-US', 'Browser',
+                            'TorBrowser', 'Tor', 'tor');
       }
       break;
-      // return path.join(__dirname, 'tor-browser_en-US', 'Browser',
-      //                  'TorBrowser', 'Tor', 'tor');
     default:
-      throw new Error('Unsupported platform');
+      throw new Error(`Unsupported platform "${platform}"`);
   }
+
+  return torpath;
 };
 
 /**

@@ -1,7 +1,5 @@
 'use strict';
 
-const TOR_VERSION = '6.5.2';
-
 const fs = require('fs');
 const { request } = require('https');
 const ncp = require('ncp');
@@ -10,6 +8,9 @@ const path = require('path');
 const childProcess = require('child_process');
 const os = require('os');
 const { tor: getTorPath } = require('..');
+
+const TOR_VERSION = '6.5.2';
+const BIN_DIR = path.join(__dirname, '../bin');
 
 
 /**
@@ -75,8 +76,8 @@ exports.unpackTorBrowserBundle = function(bundle, callback) {
 exports._unpackWindows = function(bundle, callback) {
   const extract = childProcess.spawn(_7z, [
     'x',
-    path.join(__dirname, '.tbb.exe')
-  ], { cwd: __dirname });
+    path.join(BIN_DIR, '.tbb.exe')
+  ], { cwd: BIN_DIR });
 
   extract.on('close', (code) => {
     callback(code >= 0 ? null : new Error('Failed to unpack bundle'),
@@ -91,9 +92,9 @@ exports._unpackMacintosh = function(bundle, callback) {
   const extract = childProcess.spawn('hdiutil', [
     'attach',
     '-mountpoint',
-    path.join(__dirname, '.tbb'),
-    path.join(__dirname, '.tbb.dmg')
-  ], { cwd: __dirname });
+    path.join(BIN_DIR, '.tbb'),
+    path.join(BIN_DIR, '.tbb.dmg')
+  ], { cwd: BIN_DIR });
 
   extract.on('close', (code) => {
     if (code < 0) {
@@ -101,8 +102,8 @@ exports._unpackMacintosh = function(bundle, callback) {
     }
 
     ncp.ncp(
-      path.join(__dirname, '.tbb', 'TorBrowser.app'),
-      path.join(__dirname, '.tbb.app'),
+      path.join(BIN_DIR, '.tbb', 'TorBrowser.app'),
+      path.join(BIN_DIR, '.tbb.app'),
       (err) => {
         if (err) {
           return callback(new Error('Failed to unpack bundle'));
@@ -110,8 +111,8 @@ exports._unpackMacintosh = function(bundle, callback) {
 
         extract = childProcess.spawn('hdiutil', [
           'detach',
-          path.join(__dirname, '.tbb')
-        ], { cwd: __dirname });
+          path.join(BIN_DIR, '.tbb')
+        ], { cwd: BIN_DIR });
 
         extract.on('close', (code) => {
           if (code < 0) {
@@ -131,13 +132,11 @@ exports._unpackMacintosh = function(bundle, callback) {
 exports._unpackLinux = function(bundle, callback) {
   const extract = childProcess.spawn('tar', [
     'xJf',
-    path.join(__dirname, '.tbb.xz')
-  ], { cwd: __dirname });
+    path.join(BIN_DIR, '.tbb.xz')
+  ], { cwd: BIN_DIR });
 
-  if (process.env.GRANAX_VERBOSE) {
-    extract.stdout.pipe(process.stdout);
-    extract.stderr.pipe(process.stderr);
-  }
+  extract.stdout.pipe(process.stdout);
+  extract.stderr.pipe(process.stderr);
 
   extract.on('close', (code) => {
     callback(code <= 0 ? null : new Error('Failed to unpack bundle'),
@@ -162,24 +161,28 @@ exports.install = function(callback) {
     case 'darwin':
       basename = '.tbb.dmg';
       break;
+    case 'android':
     case 'linux':
-      console.log('Skipping automatic Tor install on GNU+Linux!');
-      console.log('Be sure to install Tor using your system package manager.');
-      return;
-      // basename = '.tbb.xz';
+      if (!process.env.GRANAX_FORCE_LOCAL_TOR) {
+        // NB: Use the system installation of Tor on android and linux
+        console.log('Skipping automatic Tor install on GNU+Linux...');
+        console.log('Be sure to install Tor using your package manager!');
+        return;
+      }
+      basename = '.tbb.xz';
       break;
     default:
       throw new Error('Unsupported platform');
   }
 
-  basename = path.join(__dirname, basename);
+  basename = path.join(BIN_DIR, basename);
 
   exports.downloadTorBrowserBundle(link, basename, (err) => {
     if (err) {
       return callback(err);
     }
 
-    console.log(`Unpacking Tor Bundle into ${__dirname}...`);
+    console.log(`Unpacking Tor Bundle into ${BIN_DIR}...`);
     exports.unpackTorBrowserBundle(basename, callback);
   });
 };

@@ -1,5 +1,5 @@
 bin/*
-!bin/download-tbb.js
+!bin/.gitkeep
 jsdoc
 
 *.swp
