@@ -13,6 +13,8 @@ const { platform } = require('os');
 const { Socket } = require('net');
 const { readFileSync } = require('fs');
 
+const BIN_PATH = path.join(__dirname, '../bin');
+
 
 /**
  * Returns a {@link TorController} with automatically constructed socket
@@ -25,9 +27,9 @@ module.exports = function(options) {
   let controller = new module.exports.TorController(socket, options);
   let tor = module.exports.tor(platform());
   let child = spawn(tor, ['-f', module.exports.torrc()], {
-    cwd: path.join(__dirname, 'bin')
+    cwd: BIN_PATH
   });
-  let directory = path.join(__dirname, 'bin/.tor');
+  let directory = path.join(BIN_PATH, '.tor');
   let portFileReads = 0;
 
   function connect() {
@@ -69,11 +71,11 @@ module.exports.tor = function(platform) {
 
   switch (platform) {
     case 'win32':
-      torpath = path.join(__dirname, '$_OUTDIR', 'Browser', 'TorBrowser',
+      torpath = path.join(BIN_PATH, '$_OUTDIR', 'Browser', 'TorBrowser',
                           'Tor', 'tor.exe');
       break;
     case 'darwin':
-      torpath = path.join(__dirname, '.tbb.app', 'Contents', 'Resources',
+      torpath = path.join(BIN_PATH, '.tbb.app', 'Contents', 'Resources',
                           'TorBrowser', 'Tor', 'tor');
       break;
     case 'android':
@@ -87,7 +89,7 @@ module.exports.tor = function(platform) {
           throw new Error('Tor is not installed');
         }
       } else {
-        torpath = path.join(__dirname, 'tor-browser_en-US', 'Browser',
+        torpath = path.join(BIN_PATH, 'tor-browser_en-US', 'Browser',
                             'TorBrowser', 'Tor', 'tor');
       }
       break;
