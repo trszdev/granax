@@ -71,8 +71,7 @@ module.exports.tor = function(platform) {
 
   switch (platform) {
     case 'win32':
-      torpath = path.join(BIN_PATH, '$_OUTDIR', 'Browser', 'TorBrowser',
-                          'Tor', 'tor.exe');
+      torpath = path.join(BIN_PATH, 'Browser', 'TorBrowser', 'Tor', 'tor.exe');
       break;
     case 'darwin':
       torpath = path.join(BIN_PATH, '.tbb.app', 'Contents', 'Resources',
