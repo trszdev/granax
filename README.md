@@ -18,7 +18,9 @@ npm install granax --save
 ```
 
 As part of the installation process, Granax will download the Tor Browser 
-Bundle local to itself and use the included Tor executable.
+Bundle local to itself and use the included Tor executable (except on 
+GNU+Linux, which Granax expects Tor to be installed using the system 
+package manager). 
 
 ```js
 const tor = require('granax')();
@@ -35,7 +37,7 @@ tor.on('error', function(err) {
 });
 ```
 
-### Using System Tor Installation
+### Using System Tor Package
 
 Make sure that `ControlPort=9051` (or your preferred port) is set in your 
 `torrc`, then you may open the control socket and issue commands:

@@ -1,9 +1,13 @@
-To begin using Granax, you need to have a running and properly configured 
-[Tor](https://torproject.org). Granax will work with standalone Tor and also 
-the Tor Browser Bundle (however the recommendation is the former).
+When Granax is installed on Mac OSX or Windows platforms, it will automatically
+download a copy of the Tor Browser Bundle locally and use it - 
+**no configuration required!** On GNU+Linux systems, Granax expects the `tor` 
+package to be installed.
 
-This guide assumes you are running [Debian](https://debian.org) or a 
-derivitive, however it should translate easily to any other operating system.
+Granax will start Tor with a custom `torrc` file that can be found in 
+`lib/torrc.js`, however if you prefer to use a custom `torrc` or a different 
+Tor executable, follow this guide. This guide assumes you are running 
+[Debian](https://debian.org) or a derivitive, however it should translate 
+easily to any other operating system.
 
 ### Step 0: Install Tor
 
@@ -84,7 +88,11 @@ Now that you have a running Tor, configured to allow your user to access it's
 control port, you can integrate Tor into your own packages using Granax!
 
 ```
-const tor = require('granax')(9051).on('ready', function() {
+const { connect } = require('net');
+const { TorController } = require('granax');
+const tor = new TorController(connect(9051));
+
+tor.on('ready', function() {
   // Tor controller is ready!
 });
 ```

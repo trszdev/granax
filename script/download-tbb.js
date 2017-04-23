@@ -28,6 +28,7 @@ exports.getTorBrowserLink = function(platform, version) {
       return `${link}/torbrowser-install-${v}_en-US.exe`;
     case 'darwin':
       return `${link}/TorBrowser-${v}-osx64_en-US.dmg`;
+    case 'android':
     case 'linux':
       return os.arch() === 'x64'
         ? `${link}/tor-browser-linux64-${v}_en-US.tar.xz`

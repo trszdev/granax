@@ -46,6 +46,14 @@ describe('@module granax', function() {
 
     });
 
+    it.skip('should throw if tor not installed on gnu_linux', function() {
+
+    });
+
+    it.skip('should throw if unsupported platform', function() {
+
+    });
+
   });
 
 });
