@@ -13,7 +13,7 @@ const { platform } = require('os');
 const { Socket } = require('net');
 const { readFileSync } = require('fs');
 
-const BIN_PATH = path.join(__dirname, '../bin');
+const BIN_PATH = path.join(__dirname, 'bin');
 
 
 /**
