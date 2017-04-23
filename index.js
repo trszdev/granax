@@ -73,7 +73,8 @@ module.exports.tor = function(platform) {
                           'Tor', 'tor.exe');
       break;
     case 'darwin':
-      torpath = path.join(__dirname, '.tbb.app', 'TorBrowser', 'Tor', 'tor');
+      torpath = path.join(__dirname, '.tbb.app', 'Contents', 'Resources',
+                          'TorBrowser', 'Tor', 'tor');
       break;
     case 'android':
     case 'linux':
