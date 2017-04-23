@@ -89,14 +89,14 @@ exports._unpackWindows = function(bundle, callback) {
  * @private
  */
 exports._unpackMacintosh = function(bundle, callback) {
-  const extract = childProcess.spawn('hdiutil', [
+  const mounter = childProcess.spawn('hdiutil', [
     'attach',
     '-mountpoint',
     path.join(BIN_DIR, '.tbb'),
     path.join(BIN_DIR, '.tbb.dmg')
   ], { cwd: BIN_DIR });
 
-  extract.on('close', (code) => {
+  mounter.on('close', (code) => {
     if (code < 0) {
       return callback(new Error('Failed to unpack bundle'));
     }
@@ -109,7 +109,7 @@ exports._unpackMacintosh = function(bundle, callback) {
           return callback(new Error('Failed to unpack bundle'));
         }
 
-        extract = childProcess.spawn('hdiutil', [
+        const extract = childProcess.spawn('hdiutil', [
           'detach',
           path.join(BIN_DIR, '.tbb')
         ], { cwd: BIN_DIR });
