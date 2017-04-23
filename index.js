@@ -71,8 +71,10 @@ module.exports.tor = function(platform) {
     case 'win32':
       torpath = path.join(__dirname, '$_OUTDIR', 'Browser', 'TorBrowser',
                           'Tor', 'tor.exe');
+      break;
     case 'darwin':
       torpath = path.join(__dirname, '.tbb.app', 'TorBrowser', 'Tor', 'tor');
+      break;
     case 'android':
     case 'linux':
       if (!process.env.GRANAX_FORCE_LOCAL_TOR) {
