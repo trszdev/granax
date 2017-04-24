@@ -75,7 +75,7 @@ describe('@module granax', function() {
     let sandbox = sinon.sandbox.create();
     let _execFileSync = sandbox.stub().returns('/usr/bin/tor');
     let granax = proxyquire('..', {
-      fs: {
+      child_process: {
         execFileSync: _execFileSync
       }
     });
