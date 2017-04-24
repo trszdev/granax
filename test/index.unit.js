@@ -36,7 +36,7 @@ describe('@module granax', function() {
         readFileSync: _readFileSync
       }
     });
-    let torpath = sandbox.stub(granax, 'tor');
+    sandbox.stub(granax, 'tor');
     let tor = null;
 
     before(() => tor = granax());
@@ -74,14 +74,12 @@ describe('@module granax', function() {
 
     let sandbox = sinon.sandbox.create();
     let _execFileSync = sandbox.stub().returns('/usr/bin/tor');
-    let tor = null;
     let granax = proxyquire('..', {
       fs: {
         execFileSync: _execFileSync
       }
     });
 
-    before(() => tor = granax());
     after(() => sandbox.restore());
 
     it('should return the windows path', function() {

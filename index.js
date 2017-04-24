@@ -67,6 +67,7 @@ module.exports = function(options) {
  * @returns {string}
  */
 module.exports.tor = function(platform) {
+  /* eslint complexity: ["error", 7] */
   let torpath = null;
 
   switch (platform) {
