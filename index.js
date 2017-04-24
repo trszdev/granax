@@ -55,6 +55,8 @@ module.exports = function(options) {
     socket.connect(port);
   }
 
+  /* istanbul ignore next */
+  process.on('exit', () => child.kill());
   child.stdout.once('data', () => setTimeout(() => connect(), 1000));
   child.on('error', (err) => controller.emit('error', err));
   controller.once('ready', () => controller.takeOwnership());
