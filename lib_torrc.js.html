@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Granax Modules</title>
+	<title>Granax Source: lib/torrc.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -80,371 +80,60 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Modules</h1>
+		<h1 class="page-title">Source: lib/torrc.js</h1>
+    
 <section>
-
-<header>
-    
-        <h2>
-        
-        </h2>
-        
-    
-</header>
-
-
-<article>
-    <div class="container-overview">
-    
-        
-
-        
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="TorController.html">TorController</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Events</h3>
-
-        <dl>
-            
-<hr>
-<dt>
-    <h4 class="name" id="event:close">close</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Fires when the underlying socket closes
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="lib_controller.js.html">lib/controller.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="event:error">error</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Fired when the underlying socket encounters an error
-    </div>
-    
-
-    
-
-    
-        <h5>Type: 
-<span class="param-type">error</span>
-
-
-</h5>
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="lib_controller.js.html">lib/controller.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="event:ready">ready</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Fires when the controller is authenticated and ready to send commands
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="lib_controller.js.html">lib/controller.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        </dl>
-    
-</article>
-
+    <article>
+        <pre
+            class="sunlight-highlight-javascript ">/**
+ * @module granax/torrc
+ */
+
+'use strict';
+
+const path = require('path');
+const mkdirp = require('mkdirp');
+const { randomBytes } = require('crypto');
+const { tmpdir } = require('os');
+const { writeFileSync } = require('fs');
+
+
+/**
+ * Generates a usable torrc file, writes it to temp storage and then returns
+ * the path to the file
+ * @returns {string}
+ */
+module.exports = function() {
+  let dataDirectory = path.join(__dirname, '../bin/.tor');
+  let controlFilePath = path.join(dataDirectory, 'control-port');
+  let torrcContent = [
+    'AvoidDiskWrites 1',
+    'Log notice stderr',
+    'SocksPort auto IPv6Traffic PreferIPv6 KeepAliveIsolateSOCKSAuth',
+    'ControlPort auto',
+    `ControlPortWriteToFile ${controlFilePath}`,
+    'CookieAuthentication 1',
+    'DirReqStatistics 0',
+    'HiddenServiceStatistics 0',
+    `DataDirectory ${dataDirectory}`
+  ].join('\n');
+  let torrcFileName = 'granax-' + randomBytes(8).toString('hex');
+  let writePath = path.join(tmpdir(), torrcFileName);
+
+  mkdirp.sync(dataDirectory);
+  writeFileSync(writePath, torrcContent);
+
+  return writePath;
+};
+</pre>
+    </article>
 </section>
+
 
 
 
@@ -454,10 +143,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>

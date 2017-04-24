@@ -34,7 +34,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-granax.html">granax</a></li><li><a href="module-granax_commands.html">granax/commands</a></li><li><a href="module-granax_replies.html">granax/replies</a></li>
+					<li><a href="module-granax.html">granax</a></li><li><a href="module-granax_commands.html">granax/commands</a></li><li><a href="module-granax_replies.html">granax/replies</a></li><li><a href="module-granax_torrc.html">granax/torrc</a></li>
 				</ul>
 			</li>
 			
@@ -106,7 +106,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="module:granax"><span class="type-signature"></span>(require("granax"))(controlPort [, controllerOptions])</h4>
+    <h4 class="name" id="module:granax"><span class="type-signature"></span>(require("granax"))(options)</h4>
     
     
 </dt>
@@ -115,6 +115,7 @@
     
     <div class="description">
         Returns a <a href="TorController.html">TorController</a> with automatically constructed socket
+to the local Tor bundle executable
     </div>
     
 
@@ -137,8 +138,6 @@
         <th>Type</th>
 
         
-        <th>Argument</th>
-        
 
         
 
@@ -151,39 +150,7 @@
 
         <tr>
             
-                <td class="name"><code>controlPort</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Port to connect controller socket</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>controllerOptions</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
@@ -197,20 +164,10 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">@see <a href="TorController.html">TorController</a></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -279,6 +236,26 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="TorController.html">TorController</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -311,7 +288,7 @@
 <dd>
     
     <div class="description">
-        module:commands
+        <a href="module-granax_commands.html">module:granax/commands</a>
     </div>
     
 
@@ -380,7 +357,7 @@
 <dd>
     
     <div class="description">
-        module:replies
+        <a href="module-granax_replies.html">module:granax/replies</a>
     </div>
     
 
@@ -507,9 +484,189 @@
     
 </dd>
 
+        
+            
+<hr>
+<dt class="name" id=".torrc">
+    <h4><span class="type-signature">&lt;static> </span>torrc<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <a href="module-granax_torrc.html">module:granax/torrc</a>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="index.js.html">index.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
         </dl>
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".tor"><span class="type-signature">&lt;static> </span>tor()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns the local path to the tor bundle
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="index.js.html">index.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        </dl>
     
 
     

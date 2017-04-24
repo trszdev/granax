@@ -34,7 +34,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-granax.html">granax</a></li><li><a href="module-granax_commands.html">granax/commands</a></li><li><a href="module-granax_replies.html">granax/replies</a></li>
+					<li><a href="module-granax.html">granax</a></li><li><a href="module-granax_commands.html">granax/commands</a></li><li><a href="module-granax_replies.html">granax/replies</a></li><li><a href="module-granax_torrc.html">granax/torrc</a></li>
 				</ul>
 			</li>
 			
@@ -92,11 +92,15 @@
 </header>
 
 <article>
-    <p>To begin using Granax, you need to have a running and properly configured 
-<a href="https://torproject.org">Tor</a>. Granax will work with standalone Tor and also 
-the Tor Browser Bundle (however the recommendation is the former).</p>
-<p>This guide assumes you are running <a href="https://debian.org">Debian</a> or a 
-derivitive, however it should translate easily to any other operating system.</p>
+    <p>When Granax is installed on Mac OSX or Windows platforms, it will automatically
+download a copy of the Tor Browser Bundle locally and use it - 
+<strong>no configuration required!</strong> On GNU+Linux systems, Granax expects the <code>tor</code> 
+package to be installed.</p>
+<p>Granax will start Tor with a custom <code>torrc</code> file that can be found in 
+<code>lib/torrc.js</code>, however if you prefer to use a custom <code>torrc</code> or a different 
+Tor executable, follow this guide. This guide assumes you are running 
+<a href="https://debian.org">Debian</a> or a derivitive, however it should translate 
+easily to any other operating system.</p>
 <h3>Step 0: Install Tor</h3><p>Use your system's package manager to install the latest Tor release:</p>
 <pre class="prettyprint source"><code>sudo apt install tor</code></pre><blockquote>
 <p>See <a href="https://www.torproject.org/docs/installguide.html.en">https://www.torproject.org/docs/installguide.html.en</a></p>
@@ -131,7 +135,11 @@ ControlPort 9051
 CookieAuthentication 1</code></pre><p>Write the changes and restart Tor.</p>
 <pre class="prettyprint source"><code>sudo /etc/init.d/tor restart</code></pre><h3>Step 3: Hack The Planet</h3><p>Now that you have a running Tor, configured to allow your user to access it's 
 control port, you can integrate Tor into your own packages using Granax!</p>
-<pre class="prettyprint source"><code>const tor = require('granax')(9051).on('ready', function() {
+<pre class="prettyprint source"><code>const { connect } = require('net');
+const { TorController } = require('granax');
+const tor = new TorController(connect(9051));
+
+tor.on('ready', function() {
   // Tor controller is ready!
 });</code></pre><p>Happy hacking!</p>
 </article>
