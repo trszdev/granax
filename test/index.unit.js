@@ -3,54 +3,111 @@
 const { expect } = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
-const granax = require('..');
+const { EventEmitter } = require('events');
+const { TorController } = require('..');
 
 
 describe('@module granax', function() {
 
   describe('@exports', function() {
 
-    it.skip('should return a TorController', function() {
+    let sandbox = sinon.sandbox.create();
+    let _execFileSync = sandbox.stub();
+    let _proc = new EventEmitter();
+    _proc.stdout = new EventEmitter();
+    _proc.kill = sandbox.stub();
+    let _spawn = sandbox.stub().returns(_proc);
+    let _socket = new EventEmitter();
+    _socket.connect = sandbox.stub();
+    _socket.pipe = (o) => o;
+    function _Socket() {
+      return _socket;
+    }
+    let _readFileSync = sandbox.stub().returns('127.0.0.1:9051');
+    let granax = proxyquire('..', {
+      child_process: {
+        execFileSync: _execFileSync,
+        spawn: _spawn
+      },
+      net: {
+        Socket: _Socket
+      },
+      fs: {
+        readFileSync: _readFileSync
+      }
+    });
+    let torpath = sandbox.stub(granax, 'tor');
+    let tor = null;
 
+    before(() => tor = granax());
+    after(() => sandbox.restore());
+
+    it('should return a TorController', function() {
+      expect(tor).to.be.instanceOf(TorController);
     });
 
-    it.skip('should connect on stdout from child', function() {
-
+    it('should connect on stdout from child', function(done) {
+      _proc.stdout.emit('data', 'tor is running');
+      setTimeout(() => {
+        expect(_socket.connect.called).to.equal(true);
+        done();
+      }, 1000);
     });
 
-    it.skip('should bubble child error on controller', function() {
-
+    it('should bubble child error on controller', function(done) {
+      tor.once('error', () => done());
+      setImmediate(() => _proc.emit('error', new Error('tor failed')));
     });
 
-    it.skip('should take ownership on ready', function() {
-
-    });
-
-    it.skip('should kill child on process exit', function() {
-
+    it('should take ownership on ready', function(done) {
+      let _takeOwnership = sandbox.stub(tor, 'takeOwnership');
+      tor.emit('ready');
+      setImmediate(() => {
+        expect(_takeOwnership.called).to.equal(true);
+        done();
+      });
     });
 
   });
 
   describe('@function tor', function() {
 
-    it.skip('should return the windows path', function() {
-
+    let sandbox = sinon.sandbox.create();
+    let _execFileSync = sandbox.stub().returns('/usr/bin/tor');
+    let tor = null;
+    let granax = proxyquire('..', {
+      fs: {
+        execFileSync: _execFileSync
+      }
     });
 
-    it.skip('should return the macintosh path', function() {
+    before(() => tor = granax());
+    after(() => sandbox.restore());
 
+    it('should return the windows path', function() {
+      expect(granax.tor('win32').includes(
+        'bin/Browser/TorBrowser/Tor/tor.exe'
+      )).to.equal(true);
     });
 
-    it.skip('should return the gnu+linux path', function() {
-
+    it('should return the macintosh path', function() {
+      expect(granax.tor('darwin').includes(
+        'bin/.tbb.app/Contents/Resources/TorBrowser/Tor/tor'
+      )).to.equal(true);
     });
 
-    it.skip('should throw if tor not installed on gnu_linux', function() {
-
+    it('should return the gnu+linux path', function() {
+      expect(granax.tor('linux')).to.equal('/usr/bin/tor');
+      expect(granax.tor('android')).to.equal('/usr/bin/tor');
     });
 
-    it.skip('should throw if unsupported platform', function() {
+    it('should throw if tor not installed on gnu_linux', function() {
+      expect(function() {
+        granax.tor('blackberry lol');
+      }).to.throw(Error, 'Unsupported platform "blackberry lol"');
+    });
+
+    it('should throw if unsupported platform', function() {
 
     });
 

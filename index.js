@@ -7,8 +7,7 @@
 'use strict';
 
 const path = require('path');
-const childProcess = require('child_process');
-const { spawn } = require('child_process');
+const { spawn, execFileSync } = require('child_process');
 const { platform } = require('os');
 const { Socket } = require('net');
 const { readFileSync } = require('fs');
@@ -41,8 +40,10 @@ module.exports = function(options) {
         'control-port'
       )).toString().split(':')[1]);
     } catch (err) {
+      /* istanbul ignore next */
       portFileReads++;
 
+      /* istanbul ignore next */
       if (portFileReads <= 20) {
         return setTimeout(() => connect(), 1000);
       } else {
@@ -54,7 +55,6 @@ module.exports = function(options) {
     socket.connect(port);
   }
 
-  process.on('exit', () => child.kill());
   child.stdout.once('data', () => setTimeout(() => connect(), 1000));
   child.on('error', (err) => controller.emit('error', err));
   controller.once('ready', () => controller.takeOwnership());
@@ -79,12 +79,13 @@ module.exports.tor = function(platform) {
       break;
     case 'android':
     case 'linux':
+      /* istanbul ignore else */
       if (!process.env.GRANAX_FORCE_LOCAL_TOR) {
         // NB: Use the system Tor installation on android and linux
         try {
-          torpath = childProcess.execFileSync('which', ['tor'])
-                      .toString().trim();
+          torpath = execFileSync('which', ['tor']).toString().trim();
         } catch (err) {
+          /* istanbul ignore next */
           throw new Error('Tor is not installed');
         }
       } else {
