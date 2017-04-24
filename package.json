@@ -1,9 +1,10 @@
 {
   "name": "granax",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "complete client implementation of the tor control protocol",
   "main": "index.js",
   "scripts": {
+    "postinstall": "node script/download-tbb.js",
     "test": "npm run test-suite && npm run linter",
     "test-suite": "mocha test/** --recursive",
     "coverage": "istanbul cover _mocha -- --recursive",
@@ -49,6 +50,11 @@
   },
   "dependencies": {
     "async": "^2.3.0",
-    "merge": "^1.2.0"
+    "merge": "^1.2.0",
+    "mkdirp": "^0.5.1"
+  },
+  "optionalDependencies": {
+    "7zip": "0.0.6",
+    "ncp": "^2.0.0"
   }
 }

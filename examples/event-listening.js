@@ -6,7 +6,7 @@
 'use strict';
 
 const granax = require('..');
-const tor = granax(9051);
+const tor = granax();
 
 tor.on('ready', function() {
   console.log('Listening for SIGNAL and ADDRMAP events...');

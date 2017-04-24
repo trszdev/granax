@@ -8,7 +8,7 @@
 
 const http = require('http');
 const granax = require('..');
-const tor = granax(9051);
+const tor = granax();
 const server = http.createServer((req, res) => res.end('hello, tor!'));
 
 tor.on('ready', function() {
