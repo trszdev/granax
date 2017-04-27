@@ -23,7 +23,9 @@ describe('@module granax/torrc', function() {
       const result = torrc();
       expect(_mkdirpSync.called).to.equal(true);
       expect(_writeFileSync.called).to.equal(true);
-      expect(typeof result).to.equal('string');
+      expect(typeof result[0]).to.equal('string');
+      expect(typeof result[1]).to.equal('string');
+      expect(Array.isArray(result)).to.equal(true);
     });
 
   });

@@ -24,11 +24,9 @@ const BIN_PATH = path.join(__dirname, 'bin');
 module.exports = function(options) {
   let socket = new Socket();
   let controller = new module.exports.TorController(socket, options);
+  let [torrc, datadir] = module.exports.torrc();
   let tor = module.exports.tor(platform());
-  let child = spawn(tor, ['-f', module.exports.torrc()], {
-    cwd: BIN_PATH
-  });
-  let directory = path.join(BIN_PATH, '.tor');
+  let child = spawn(tor, ['-f', torrc], { cwd: BIN_PATH });
   let portFileReads = 0;
 
   function connect() {
@@ -36,7 +34,7 @@ module.exports = function(options) {
 
     try {
       port = parseInt(readFileSync(path.join(
-        directory,
+        datadir,
         'control-port'
       )).toString().split(':')[1]);
     } catch (err) {

@@ -11,14 +11,15 @@ const granax = require('..');
 const tor = granax();
 const server = http.createServer((req, res) => res.end('hello, tor!'));
 
+server.listen(0, '127.0.0.1');
+
 tor.on('ready', function() {
-  server.listen(9555, '127.0.0.1');
-  tor.createHiddenService('127.0.0.1:9555', (err, result) => {
-    if (err) {
-      console.error(err);
+  tor.createHiddenService(`127.0.0.1:${server.address().port}`, (e, data) => {
+    if (e) {
+      console.error(e);
     } else {
       console.info(
-        `service online! navigate to ${result.serviceId}.onion in tor browser!`
+        `service online! navigate to ${data.serviceId}.onion in tor browser!`
       );
     }
   });
