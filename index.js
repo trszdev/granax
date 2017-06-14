@@ -19,12 +19,13 @@ const BIN_PATH = path.join(__dirname, 'bin');
  * Returns a {@link TorController} with automatically constructed socket
  * to the local Tor bundle executable
  * @param {object} options
+ * @param {object} torrcOptions
  * @returns {TorController}
  */
-module.exports = function(options) {
+module.exports = function(options, torrcOptions) {
   let socket = new Socket();
   let controller = new module.exports.TorController(socket, options);
-  let [torrc, datadir] = module.exports.torrc();
+  let [torrc, datadir] = module.exports.torrc(torrcOptions);
   let tor = module.exports.tor(platform());
   let child = spawn(tor, ['-f', torrc], { cwd: BIN_PATH });
   let portFileReads = 0;

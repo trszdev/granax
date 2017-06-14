@@ -42,7 +42,7 @@ describe('@module:granax/commands', function() {
         clientBlob: 'pass',
         basicAuth: true
       })).to.equal(
-        'ADD_ONION NEW:BEST BasicAuth Port=80,127.0.0.1:8080 ' +
+        'ADD_ONION NEW:BEST Flags=BasicAuth Port=80,127.0.0.1:8080 ' +
           'ClientAuth=user:pass'
       );
     });
