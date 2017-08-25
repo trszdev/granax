@@ -51,7 +51,7 @@ module.exports = function(options, torrcOptions) {
       }
     }
 
-    socket.connect(port);
+    socket.connect(port, '127.0.0.1');
   }
 
   /* istanbul ignore next */
