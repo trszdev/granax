@@ -9,7 +9,7 @@ const childProcess = require('child_process');
 const os = require('os');
 const { tor: getTorPath } = require('..');
 
-const TOR_VERSION = '6.5.2';
+const TOR_VERSION = '7.0.4';
 const BIN_DIR = path.join(__dirname, '../bin');
 
 
