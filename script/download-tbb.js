@@ -8,8 +8,7 @@ const path = require('path');
 const childProcess = require('child_process');
 const os = require('os');
 const { tor: getTorPath } = require('..');
-
-const TOR_VERSION = '7.0.4';
+const getLatestTorBrowserVersion = require('latest-torbrowser-version');
 const BIN_DIR = path.join(__dirname, '../bin');
 
 
@@ -17,24 +16,39 @@ const BIN_DIR = path.join(__dirname, '../bin');
  * Get the platform specific download like for TBB by version
  * @param {string} platform
  * @param {string} version
+ * @param {function} callback
  * @returns {string}
  */
-exports.getTorBrowserLink = function(platform, version) {
-  const v = version || TOR_VERSION;
-  const link = `https://dist.torproject.org/torbrowser/${v}`;
+exports.getTorBrowserLink = function(platform, version, callback) {
+  if (typeof version === 'function') {
+    callback = version;
+    version = undefined;
+  }
 
-  switch (platform) {
-    case 'win32':
-      return `${link}/torbrowser-install-${v}_en-US.exe`;
-    case 'darwin':
-      return `${link}/TorBrowser-${v}-osx64_en-US.dmg`;
-    case 'android':
-    case 'linux':
-      return os.arch() === 'x64'
-        ? `${link}/tor-browser-linux64-${v}_en-US.tar.xz`
-        : `${link}/tor-browser-linux32-${v}_en-US.tar.xz`
-    default:
-      throw new Error(`Unsupported platform "${platform}"`);
+  function createHref(v) {
+    const link = `https://dist.torproject.org/torbrowser/${v}`;
+
+    switch (platform) {
+      case 'win32':
+        return `${link}/torbrowser-install-${v}_en-US.exe`;
+      case 'darwin':
+        return `${link}/TorBrowser-${v}-osx64_en-US.dmg`;
+      case 'android':
+      case 'linux':
+        return os.arch() === 'x64'
+          ? `${link}/tor-browser-linux64-${v}_en-US.tar.xz`
+          : `${link}/tor-browser-linux32-${v}_en-US.tar.xz`
+      default:
+        throw new Error(`Unsupported platform "${platform}"`);
+    }
+  }
+
+  if (version) {
+    callback(null, createHref(version));
+  } else {
+    getLatestTorBrowserVersion((err, version) => {
+      callback(err, createHref(version));
+    });
   }
 };
 
@@ -150,10 +164,7 @@ exports._unpackLinux = function(bundle, callback) {
  * @param {function} callback
  */
 exports.install = function(callback) {
-  let link = exports.getTorBrowserLink(os.platform());
   let basename = null;
-
-  console.log(`Downloading Tor Bundle from ${link}...`);
 
   switch (os.platform()) {
     case 'win32':
@@ -178,13 +189,20 @@ exports.install = function(callback) {
 
   basename = path.join(BIN_DIR, basename);
 
-  exports.downloadTorBrowserBundle(link, basename, (err) => {
+  exports.getTorBrowserLink(os.platform(), (err, link) => {
     if (err) {
       return callback(err);
     }
 
-    console.log(`Unpacking Tor Bundle into ${BIN_DIR}...`);
-    exports.unpackTorBrowserBundle(basename, callback);
+    console.log(`Downloading Tor Bundle from ${link}...`);
+    exports.downloadTorBrowserBundle(link, basename, (err) => {
+      if (err) {
+        return callback(err);
+      }
+
+      console.log(`Unpacking Tor Bundle into ${BIN_DIR}...`);
+      exports.unpackTorBrowserBundle(basename, callback);
+    });
   });
 };
 
