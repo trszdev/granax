@@ -37,7 +37,7 @@ describe('@module:granax/commands', function() {
   describe('ADD_ONION', function() {
 
     it('should return add onion message with basic auth', function() {
-      expect(commands.ADD_ONION('127.0.0.1:8080', {
+      expect(commands.ADD_ONION([{target: '127.0.0.1:8080'}], {
         clientName: 'user',
         clientBlob: 'pass',
         basicAuth: true
@@ -48,8 +48,30 @@ describe('@module:granax/commands', function() {
     });
 
     it('should return add onion message', function() {
-      expect(commands.ADD_ONION('127.0.0.1:8080')).to.equal(
+      expect(commands.ADD_ONION([{target: '127.0.0.1:8080'}])).to.equal(
         'ADD_ONION NEW:BEST Port=80,127.0.0.1:8080'
+      );
+    });
+
+    it('should return add onion message with multiple ports', function() {
+      const ports = [
+        {target: '127.0.0.1:8080'},
+        {virtualPort: 8070, target: '127.0.0.1:8090'}
+      ];
+      expect(commands.ADD_ONION(ports)).to.equal(
+        'ADD_ONION NEW:BEST Port=80,127.0.0.1:8080 Port=8070,127.0.0.1:8090'
+      );
+    });
+
+    it('should return add onion message with given single port', function() {
+      expect(commands.ADD_ONION([{virtualPort: 8080}])).to.equal(
+        'ADD_ONION NEW:BEST Port=8080'
+      );
+    });
+
+    it('should return add onion message with default port', function() {
+      expect(commands.ADD_ONION([])).to.equal(
+        'ADD_ONION NEW:BEST Port=80'
       );
     });
 
