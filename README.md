@@ -26,7 +26,7 @@ package manager).
 const tor = require('granax')();
 
 tor.on('ready', function() {
-  tor.createHiddenService('127.0.0.1:8080', (err, result) => {
+  tor.createHiddenService([{target: '127.0.0.1:8080'}], (err, result) => {
     console.info(`Service URL: ${result.serviceId}.onion`);
     console.info(`Private Key: ${result.privateKey}`);
   });
