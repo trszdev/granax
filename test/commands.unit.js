@@ -75,6 +75,23 @@ describe('@module:granax/commands', function() {
       );
     });
 
+    describe('ports as string and virtualport in options', function() {
+
+      it('should return add onion message', function() {
+        expect(commands.ADD_ONION('127.0.0.1:8080')).to.equal(
+          'ADD_ONION NEW:BEST Port=80,127.0.0.1:8080'
+        );
+      });
+
+      it('should return add onion message with correct vport', function() {
+        expect(commands.ADD_ONION('127.0.0.1:8080',
+                                  {virtualPort: 8080})).to.equal(
+          'ADD_ONION NEW:BEST Port=8080,127.0.0.1:8080'
+        );
+      });
+
+    })
+
   });
 
   describe('DEL_ONION', function() {
