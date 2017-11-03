@@ -30,6 +30,8 @@ module.exports = function(options, torrcOptions) {
   let child = spawn(tor, ['-f', torrc], { cwd: BIN_PATH });
   let portFileReads = 0;
 
+  controller.process = child; // NB: Expose the tor process to userland
+
   function connect() {
     let port = null;
 
