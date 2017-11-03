@@ -60,6 +60,9 @@ module.exports = function(options, torrcOptions) {
   process.on('exit', () => child.kill());
   child.stdout.once('data', () => setTimeout(() => connect(), 1000));
   child.on('error', (err) => controller.emit('error', err));
+  child.on('exit', (code) => {
+    controller.emit('error', new Error('Tor exited with code ' + code));
+  });
   controller.once('ready', () => controller.takeOwnership());
 
   return controller;
