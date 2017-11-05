@@ -22,6 +22,12 @@ Bundle local to itself and use the included Tor executable (except on
 GNU+Linux, which Granax expects Tor to be installed using the system 
 package manager). 
 
+> Note! Sometimes the postinstall hook can fail if a new version of Tor Browser 
+> has just been released and the appropriate package for your platform has not 
+> been made available yet. You can force a specific version by setting the 
+> environment variable `GRANAX_TOR_VERSION` to the desired release that is 
+> listed [here](https://dist.torproject.org/torbrowser) when installing granax.
+
 ```js
 const tor = require('granax')();
 
