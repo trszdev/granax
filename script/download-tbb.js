@@ -60,9 +60,15 @@ exports.getTorBrowserLink = function(platform, version, callback) {
  */
 exports.downloadTorBrowserBundle = function(link, target, callback) {
   request(link, (res) => {
-    res.pipe(fs.createWriteStream(target))
-      .on('finish', callback)
-      .on('error', callback);
+    if (res.statusCode !== 200) {
+      callback(new Error(
+        'Failed to download Tor Bundle, status code: ' + res.statusCode
+      ));
+    } else {
+      res.pipe(fs.createWriteStream(target))
+        .on('finish', callback)
+        .on('error', callback);
+    }
   }).end();
 };
 
@@ -189,21 +195,25 @@ exports.install = function(callback) {
 
   basename = path.join(BIN_DIR, basename);
 
-  exports.getTorBrowserLink(os.platform(), (err, link) => {
-    if (err) {
-      return callback(err);
-    }
-
-    console.log(`Downloading Tor Bundle from ${link}...`);
-    exports.downloadTorBrowserBundle(link, basename, (err) => {
+  exports.getTorBrowserLink(
+    os.platform(),
+    process.env.GRANAX_TOR_VERSION,
+    (err, link) => {
       if (err) {
         return callback(err);
       }
 
-      console.log(`Unpacking Tor Bundle into ${BIN_DIR}...`);
-      exports.unpackTorBrowserBundle(basename, callback);
-    });
-  });
+      console.log(`Downloading Tor Bundle from ${link}...`);
+      exports.downloadTorBrowserBundle(link, basename, (err) => {
+        if (err) {
+          return callback(err);
+        }
+
+        console.log(`Unpacking Tor Bundle into ${BIN_DIR}...`);
+        exports.unpackTorBrowserBundle(basename, callback);
+      });
+    }
+  );
 };
 
 if (!module.parent) {
