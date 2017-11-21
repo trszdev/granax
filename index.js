@@ -13,6 +13,9 @@ const { Socket } = require('net');
 const { readFileSync } = require('fs');
 
 const BIN_PATH = path.join(__dirname, 'bin');
+const LD_LIBRARY_PATH = path.join(
+  BIN_PATH, 'tor-browser_en-US', 'Browser', 'TorBrowser', 'Tor'
+);
 
 
 /**
@@ -27,7 +30,10 @@ module.exports = function(options, torrcOptions) {
   let controller = new module.exports.TorController(socket, options);
   let [torrc, datadir] = module.exports.torrc(torrcOptions);
   let tor = module.exports.tor(platform());
-  let child = spawn(tor, ['-f', torrc], { cwd: BIN_PATH });
+  let child = spawn(tor, ['-f', torrc], {
+    cwd: BIN_PATH,
+    env: { LD_LIBRARY_PATH }
+  });
   let portFileReads = 0;
 
   controller.process = child; // NB: Expose the tor process to userland
@@ -87,7 +93,7 @@ module.exports.tor = function(platform) {
     case 'android':
     case 'linux':
       /* istanbul ignore else */
-      if (!process.env.GRANAX_FORCE_LOCAL_TOR) {
+      if (process.env.GRANAX_USE_SYSTEM_TOR) {
         // NB: Use the system Tor installation on android and linux
         try {
           torpath = execFileSync('which', ['tor']).toString().trim();
@@ -96,8 +102,7 @@ module.exports.tor = function(platform) {
           throw new Error('Tor is not installed');
         }
       } else {
-        torpath = path.join(BIN_PATH, 'tor-browser_en-US', 'Browser',
-                            'TorBrowser', 'Tor', 'tor');
+        torpath = path.join(LD_LIBRARY_PATH, 'tor');
       }
       break;
     default:

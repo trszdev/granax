@@ -46,9 +46,9 @@ exports.getTorBrowserLink = function(platform, version, callback) {
   if (version) {
     callback(null, createHref(version));
   } else {
-    getLatestTorBrowserVersion((err, version) => {
-      callback(err, createHref(version));
-    });
+    getLatestTorBrowserVersion(platform, !!process.env.GRANAX_USE_TOR_ALPHA)
+      .then(version => callback(null, createHref(version)))
+      .catch(err => callback(err));
   }
 };
 
@@ -181,7 +181,7 @@ exports.install = function(callback) {
       break;
     case 'android':
     case 'linux':
-      if (!process.env.GRANAX_FORCE_LOCAL_TOR) {
+      if (process.env.GRANAX_USE_SYSTEM_TOR) {
         // NB: Use the system installation of Tor on android and linux
         console.log('Skipping automatic Tor install on GNU+Linux...');
         console.log('Be sure to install Tor using your package manager!');

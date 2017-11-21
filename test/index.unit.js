@@ -95,8 +95,12 @@ describe('@module granax', function() {
     });
 
     it('should return the gnu+linux path', function() {
-      expect(granax.tor('linux')).to.equal('/usr/bin/tor');
-      expect(granax.tor('android')).to.equal('/usr/bin/tor');
+      expect(granax.tor('linux').includes(
+        'bin/tor-browser_en-US/Browser/TorBrowser/Tor/tor'
+      )).to.equal(true);
+      expect(granax.tor('android').includes(
+        'bin/tor-browser_en-US/Browser/TorBrowser/Tor/tor'
+      )).to.equal(true);
     });
 
     it('should throw if tor not installed on gnu_linux', function() {

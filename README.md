@@ -18,15 +18,12 @@ npm install granax --save
 ```
 
 As part of the installation process, Granax will download the Tor Browser 
-Bundle local to itself and use the included Tor executable (except on 
-GNU+Linux, which Granax expects Tor to be installed using the system 
-package manager). 
+Bundle local to itself and use the included Tor executable, however on 
+GNU+Linux, you may opt for Granax to use the system Tor installed using your 
+distribution's package manager by setting `GRANAX_USE_SYSTEM_TOR=1`. 
 
-> Note! Sometimes the postinstall hook can fail if a new version of Tor Browser 
-> has just been released and the appropriate package for your platform has not 
-> been made available yet. You can force a specific version by setting the 
-> environment variable `GRANAX_TOR_VERSION` to the desired release that is 
-> listed [here](https://dist.torproject.org/torbrowser) when installing granax.
+You can also tell Granax to install the latest alpha release of Tor instead of 
+the latest stable release, with `GRANAX_USE_TOR_ALPHA=1`.
 
 ```js
 const tor = require('granax')();

@@ -1,6 +1,6 @@
 {
   "name": "granax",
-  "version": "2.2.1",
+  "version": "3.0.0",
   "description": "complete client implementation of the tor control protocol",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,9 @@
     "linter": "eslint index.js lib test",
     "generate-docs": "mkdir -p ./jsdoc && rm -r ./jsdoc && jsdoc index.js lib -r -R README.md -u ./doc -c .jsdoc.json --verbose -d ./jsdoc",
     "deploy-docs": "gh-pages -d jsdoc --repo git@github.com:bookchin/granax.git"
+  },
+  "engines": {
+    "node": "^8.9.0"
   },
   "repository": {
     "type": "git",
@@ -50,7 +53,7 @@
   },
   "dependencies": {
     "async": "^2.3.0",
-    "latest-torbrowser-version": "^1.0.0",
+    "latest-torbrowser-version": "^2.0.0",
     "merge": "^1.2.0",
     "mkdirp": "^0.5.1"
   },
