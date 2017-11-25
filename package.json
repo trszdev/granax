@@ -1,6 +1,6 @@
 {
   "name": "granax",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "complete client implementation of the tor control protocol",
   "main": "index.js",
   "scripts": {
