@@ -72,7 +72,6 @@ module.exports = function(options, torrcOptions) {
   child.on('exit', (code) => {
     controller.emit('error', new Error('Tor exited with code ' + code));
   });
-  controller.once('ready', () => controller.takeOwnership());
 
   return controller;
 };

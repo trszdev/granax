@@ -59,15 +59,6 @@ describe('@module granax', function() {
       setImmediate(() => _proc.emit('error', new Error('tor failed')));
     });
 
-    it('should take ownership on ready', function(done) {
-      let _takeOwnership = sandbox.stub(tor, 'takeOwnership');
-      tor.emit('ready');
-      setImmediate(() => {
-        expect(_takeOwnership.called).to.equal(true);
-        done();
-      });
-    });
-
   });
 
   describe('@function tor', function() {
