@@ -29,7 +29,7 @@ module.exports = function(options, torrcOptions) {
   let socket = new Socket();
   let controller = new module.exports.TorController(socket, options);
   let [torrc, datadir] = module.exports.torrc(torrcOptions);
-  let tor = module.exports.tor(platform());
+  let tor = options.torPath ? new String(options.torPath) : module.exports.tor(platform());
   let args = process.env.GRANAX_TOR_ARGS
     ? process.env.GRANAX_TOR_ARGS.split(' ')
     : [];
