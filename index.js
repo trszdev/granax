@@ -76,6 +76,22 @@ module.exports = function(options, torrcOptions) {
   return controller;
 };
 
+
+function getSystemTorPathSync(command) {
+  /* istanbul ignore else */
+  if (process.env.GRANAX_USE_SYSTEM_TOR) {
+    try {
+      return execFileSync(command, ['tor']).toString().trim();
+    } catch (err) {
+      /* istanbul ignore next */
+      throw new Error('Tor is not installed');
+    }
+  } else {
+    return '';
+  }
+}
+
+
 /**
  * Returns the local path to the tor bundle
  * @returns {string}
@@ -86,7 +102,8 @@ module.exports.tor = function(platform) {
 
   switch (platform) {
     case 'win32':
-      torpath = path.join(BIN_PATH, 'Browser', 'TorBrowser', 'Tor', 'tor.exe');
+      torpath = getSystemTorPathSync('where') || 
+        path.join(BIN_PATH, 'Browser', 'TorBrowser', 'Tor', 'tor.exe');
       break;
     case 'darwin':
       torpath = path.join(BIN_PATH, '.tbb.app', 'Contents', 'Resources',
@@ -94,18 +111,7 @@ module.exports.tor = function(platform) {
       break;
     case 'android':
     case 'linux':
-      /* istanbul ignore else */
-      if (process.env.GRANAX_USE_SYSTEM_TOR) {
-        // NB: Use the system Tor installation on android and linux
-        try {
-          torpath = execFileSync('which', ['tor']).toString().trim();
-        } catch (err) {
-          /* istanbul ignore next */
-          throw new Error('Tor is not installed');
-        }
-      } else {
-        torpath = path.join(LD_LIBRARY_PATH, 'tor');
-      }
+      torpath = getSystemTorPathSync('which') || path.join(LD_LIBRARY_PATH, 'tor');
       break;
     default:
       throw new Error(`Unsupported platform "${platform}"`);
